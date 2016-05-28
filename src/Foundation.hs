@@ -14,7 +14,7 @@ data Sitio = Sitio { connPool :: ConnectionPool }
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Departamento
    nome Text
-   sigla Text sqltype=varchar(2)
+   sigla Text sqltype=varchar(3)
    deriving Show
 
 Pessoa
