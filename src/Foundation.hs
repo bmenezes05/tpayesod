@@ -5,25 +5,54 @@
 module Foundation where
 import Import
 import Yesod
+import Yesod.Static
 import Data.Text
 import Database.Persist.Postgresql
     ( ConnectionPool, SqlBackend, runSqlPool, runMigration )
 
-data Sitio = Sitio { connPool :: ConnectionPool }
+data Sitio = Sitio {getStatic :: Static, connPool :: ConnectionPool }
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
-Departamento
+User json
    nome Text
-   sigla Text sqltype=varchar(3)
+   login Text
+   senha Text
+   tipo Int
    deriving Show
-
-Pessoa
-   nome Text
-   idade Int
-   salario Double
-   deptoid DepartamentoId
-   deriving Show
+   
+PlayerCoach json
+   coachId UserId
+   playerId UserId
+   UniquePlayerCoach coachId playerId
+   
+Match json
+    userId UserId
+    opponentName Text
+    setPro Int
+    setCon Int
+    deriving Show
+    
+Set json
+    matchId MatchId
+    gamesPro Int
+    gamesCon Int
+    pointsServiceWon Int
+    pointsServiceLost Int
+    pointsService Int
+    firstServiceIn Int
+    aces Int
+    forehandWon Int
+    backhandWon Int
+    volleyWon Int
+    forceError Int
+    doubleFaults Int
+    forehandError Int
+    backhandError Int
+    volleyError Int
+    deriving Show    
 |]
+
+staticFiles "static"
 
 mkYesodData "Sitio" pRoutes
 

@@ -1,0 +1,67 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+    
+          <a class="navbar-brand" href="#"><img src="img/logo.png" style="width: 66px; margin-top: -12px;"></a>
+    
+        <div id="navbar" class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right" method="post" action=@{HomeR}>
+            <!-- <div class="form-group">
+              <input type="text" id="email" name="email" placeholder="Email" class="form-control">
+    
+            <div class="form-group">
+              <input type="password" id="password" name="password" placeholder="Password" class="form-control">
+              -->
+            ^{widget}
+    
+            <button type="submit" name="submit" class="btn btn-success">Sign in</button>
+
+<!-- Full Page Image Background Carousel Header -->
+<header id="myCarousel" class="carousel slide">
+    
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active">
+        <li data-target="#myCarousel" data-slide-to="1">
+        <li data-target="#myCarousel" data-slide-to="2">
+    
+
+    <!-- Wrapper for Slides -->
+    <div class="carousel-inner">
+        <div class="item active">
+            <!-- Set the first background image using inline CSS below. -->
+            <div class="fill" style="background-image:url('img/image1.jpg');">
+            <div class="carousel-caption">
+                <h2>Caption 1
+            
+        
+        <div class="item">
+            <!-- Set the second background image using inline CSS below. -->
+            <div class="fill" style="background-image:url('img/image2.jpg');">
+            <div class="carousel-caption">
+                <h2>Caption 2</h2>
+            
+        
+        <div class="item">
+            <!-- Set the third background image using inline CSS below. -->
+            <div class="fill" style="background-image:url('img/image3.jpg');">
+            <div class="carousel-caption">
+                <h2>Caption 3
+            
+        
+    
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+        <span class="icon-prev">
+    
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+        <span class="icon-next">>
+    
+
+
+                

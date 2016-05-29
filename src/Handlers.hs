@@ -8,98 +8,91 @@ import Foundation
 import Control.Monad.Logger (runStdoutLoggingT)
 import Control.Applicative
 import Data.Text
-
+import Text.Lucius
 import Database.Persist.Postgresql
 
 mkYesodDispatch "Sitio" pRoutes
 
-formDepto :: Form Departamento
-formDepto = renderDivs $ Departamento <$>
-            areq textField "Nome" Nothing <*>
-            areq textField FieldSettings{fsId=Just "hident2",
-                           fsLabel="Sigla",
-                           fsTooltip= Nothing,
-                           fsName= Nothing,
-                           fsAttrs=[("maxlength","3")]} Nothing
+formUser :: Form User
+formUser = renderDivs $ User
+           <$> areq textField "Nome: " Nothing 
+           <*> areq textField "Login: " Nothing
+           <*> areq passwordField "Senha: " Nothing
+           <*> areq intField "Tipo: " Nothing
+           
+        --   <*> aopt selectFieldList tipo "Tipo"
+        --     where
+        --         tipo :: [(Text, Int)]
+        --         tipo = [("Jogador", 0), ("Treinador", 1)] 
+           
 
-formPessoa :: Form Pessoa
-formPessoa = renderDivs $ Pessoa <$>
-             areq textField "Nome" Nothing <*>
-             areq intField "Idade" Nothing <*>
-             areq doubleField "Salario" Nothing <*>
-             areq (selectField dptos) "Depto" Nothing
-
-dptos = do
-       entidades <- runDB $ selectList [] [Asc DepartamentoNome] 
-       optionsPairs $ fmap (\ent -> (departamentoSigla $ entityVal ent, entityKey ent)) entidades
-
-getHelloR :: Handler Html
-getHelloR = defaultLayout [whamlet|
-     <h1> _{MsgHello}
-|]
-
--- FUNCAO PARA GERAR FORMULARIOS DE UMA MANEIRA GENERICA
-widgetForm :: Route Sitio -> Enctype -> Widget -> Text -> Widget
-widgetForm x enctype widget y = $(whamletFile "templates/form.hamlet")
+formHome :: Form (Text,Text)
+formHome = renderDivs $ (,) <$>
+           areq textField "Login: " Nothing <*>
+           areq passwordField "Senha: " Nothing
 
 getCadastroR :: Handler Html
 getCadastroR = do
-             (widget, enctype) <- generateFormPost formPessoa
-             defaultLayout $ widgetForm CadastroR enctype widget "Pessoas"
+           (widget, enctype) <- generateFormPost formUser
+           defaultLayout $ do 
+           [whamlet|
+                 <form method=post enctype=#{enctype} action=@{CadastroR}>
+                     ^{widget}
+                     <input type="submit" value="Enviar">
+           |]
 
-getPessoaR :: PessoaId -> Handler Html
-getPessoaR pid = do
-             pessoa <- runDB $ get404 pid 
-             dpto <- runDB $ get404 (pessoaDeptoid pessoa)
-             defaultLayout [whamlet| 
-                 <h1> Seja bem-vindx #{pessoaNome pessoa}
-                 <p> Salario: #{pessoaSalario pessoa}
-                 <p> Idade: #{pessoaIdade pessoa}
-                 <p> Departamento: #{departamentoNome dpto}
-             |]
-
-getListarR :: Handler Html
-getListarR = do
-             listaP <- runDB $ selectList [] [Asc PessoaNome]
-             defaultLayout $ [whamlet|
-                 <h1> Pessoas cadastradas:
-                 $forall Entity pid pessoa <- listaP
-                     <a href=@{PessoaR pid}> #{pessoaNome pessoa} 
-                     <form method=post action=@{PessoaR pid}> 
-                         <input type="submit" value="Deletar"><br>
-             |] >> toWidget [lucius|
-                form  { display:inline; }
-                input { background-color: #ecc; border:0;}
-             |]
+getPerfilR :: UserId -> Handler Html
+getPerfilR uid = do
+      user <- runDB $ get404 uid
+      defaultLayout $ do
+          $(whamletFile "templates/perfil.hamlet")
+          toWidget $ $(luciusFile "templates/perfil.lucius")
 
 postCadastroR :: Handler Html
 postCadastroR = do
-                ((result, _), _) <- runFormPost formPessoa
-                case result of
-                    FormSuccess pessoa -> do
-                       runDB $ insert pessoa 
-                       defaultLayout [whamlet| 
-                           <h1> #{pessoaNome pessoa} Inseridx com sucesso. 
-                       |]
-                    _ -> redirect CadastroR
+           ((result, _), _) <- runFormPost formUser
+           case result of 
+               FormSuccess user -> (runDB $ insert user) >>= \piid -> redirect (PerfilR piid)
+               _ -> redirect ErroR
 
-getDeptoR :: Handler Html
-getDeptoR = do
-             (widget, enctype) <- generateFormPost formDepto
-             defaultLayout $ widgetForm DeptoR enctype widget "Departamentos"
+getAdminR :: Handler Html
+getAdminR = defaultLayout [whamlet|
+    <h1> Bem-vindo meu Rei!
+|]
 
-postDeptoR :: Handler Html
-postDeptoR = do
-                ((result, _), _) <- runFormPost formDepto
-                case result of
-                    FormSuccess depto -> do
-                       runDB $ insert depto
-                       defaultLayout [whamlet|
-                           <h1> #{departamentoNome depto} Inserido com sucesso. 
-                       |]
-                    _ -> redirect DeptoR
+getHomeR :: Handler Html
+getHomeR = do
+            (widget, enctype) <- generateFormPost formHome
+            defaultLayout $ do
+                $(whamletFile "templates/home.hamlet")
+                toWidget $ $(luciusFile "templates/home.lucius")
+                addScript $ StaticR js_highcharts_js
+                addStylesheet $ StaticR css_bootstrap_css
+                toWidget  [julius|
+                    $('.carousel').carousel({
+                        interval: 5000
+                    })
+                |]
 
-postPessoaR :: PessoaId -> Handler Html
-postPessoaR pid = do
-     runDB $ delete pid
-     redirect ListarR
+postHomeR :: Handler Html
+postHomeR = do
+           ((result, _), _) <- runFormPost formHome
+           case result of 
+               FormSuccess ("admin","admin") -> setSession "_ID" "admin" >> redirect AdminR
+               FormSuccess (login,senha) -> do 
+                   user <- runDB $ selectFirst [UserLogin ==. login, UserSenha ==. senha] []
+                   case user of
+                       Nothing -> redirect HomeR
+                       Just (Entity uid u) -> setSession "_ID" (pack $ show $ fromSqlKey uid) >> redirect (PerfilR uid)
+
+getErroR :: Handler Html
+getErroR = defaultLayout [whamlet|
+     <h1> Erro de cadastro
+|]
+
+getLogoutR :: Handler Html
+getLogoutR = do
+     deleteSession "_ID"
+     defaultLayout [whamlet| 
+         <h1> ADEUS!
+     |]

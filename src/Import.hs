@@ -2,12 +2,13 @@
 module Import where
 
 import Yesod
--- apesar do prof, por preguica, estar usando
--- uma rota / para cadastro. Nao facam em casa.
+
 pRoutes = [parseRoutes|
-   / CadastroR GET POST
-   /hello HelloR GET
-   /listar ListarR GET 
-   /pessoa/#PessoaId PessoaR GET POST
-   /depto DeptoR GET POST
+   / HomeR GET POST
+   /erro ErroR GET
+   /cadastro CadastroR GET POST
+   /perfil/#UserId PerfilR GET
+   /admin AdminR GET
+   /logout LogoutR GET
+   /static StaticR Static getStatic
 |]
