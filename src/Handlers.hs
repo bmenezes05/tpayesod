@@ -45,8 +45,11 @@ getPerfilR :: UserId -> Handler Html
 getPerfilR uid = do
       user <- runDB $ get404 uid
       defaultLayout $ do
-          $(whamletFile "templates/perfil.hamlet")
-          toWidget $ $(luciusFile "templates/perfil.lucius")
+            $(whamletFile "templates/perfil.hamlet")
+            toWidget $ $(luciusFile "templates/perfil.lucius")
+            addScript $ StaticR js_highcharts_js
+            addStylesheet $ StaticR css_bootstrap_css
+            addStylesheet $ StaticR css_font_awesome_css
 
 postCadastroR :: Handler Html
 postCadastroR = do
@@ -66,8 +69,8 @@ getHomeR = do
             defaultLayout $ do
                 $(whamletFile "templates/home.hamlet")
                 toWidget $ $(luciusFile "templates/home.lucius")
-                addScript $ StaticR js_highcharts_js
                 addStylesheet $ StaticR css_bootstrap_css
+                addStylesheet $ StaticR css_font_awesome_css
                 toWidget  [julius|
                     $('.carousel').carousel({
                         interval: 5000
