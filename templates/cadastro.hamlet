@@ -10,7 +10,7 @@
           <a class="navbar-brand" href="#"><img src=@{StaticR img_logo_png} style="width: 66px; margin-top: -12px;"></a>
     
         <div id="navbar" class="navbar-collapse collapse">
-          <a href=@{CadastroR}>Não tem uma conta? Cadastre-se!</a>
+          <a href=@{HomeR}>Já possui uma conta? Faça o login</a>
           <form class="navbar-form navbar-right" method="post" action=@{HomeR}>
             <!-- <div class="form-group">
               <input type="text" id="email" name="email" placeholder="Email" class="form-control">
@@ -35,21 +35,21 @@
     <div class="carousel-inner">
         <div class="item active">
             <!-- Set the first background image using inline CSS below. -->
-            <div class="fill" style="background-image:url('@{StaticR img_image1_jpg});">
+            <div class="fill" style="background-image:url('img/image1.jpg');">
             <div class="carousel-caption">
                 <h2>Caption 1
             
         
         <div class="item">
             <!-- Set the second background image using inline CSS below. -->
-            <div class="fill" style="background-image:url('@{StaticR img_image2_jpg}');">
+            <div class="fill" style="background-image:url('img/image2.jpg');">
             <div class="carousel-caption">
                 <h2>Caption 2</h2>
             
         
         <div class="item">
             <!-- Set the third background image using inline CSS below. -->
-            <div class="fill" style="background-image:url('@{StaticR img_image3_jpg}');">
+            <div class="fill" style="background-image:url('img/image3.jpg');">
             <div class="carousel-caption">
                 <h2>Caption 3
             

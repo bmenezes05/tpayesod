@@ -15,33 +15,59 @@ import Data.Text
 import Text.Lucius
 import Text.Julius
 import Database.Persist.Postgresql
+import Yesod.Form.Bootstrap3
 
 mkYesodDispatch "Sitio" pRoutes
 
+textBoxField :: Text -> Field Handler Text
+textBoxField label = Field
+               { fieldParse = \rawVals _ ->
+                 case rawVals of
+                   [a] -> return $ Right $ Just a
+                   [] -> return $ Right Nothing
+               , fieldView = \idAttr nameAttr otherAttrs eResult isReq ->
+                 [whamlet|
+                    <div class="form-group">
+                        <input type="text" id=#{idAttr} name=#{nameAttr} placeholder=#{label} class="form-control">
+                  |]
+               , fieldEnctype = UrlEncoded
+               }
+
+tipo :: [(Text, Int)]
+tipo = [("Jogador", 0), ("Treinador", 1)]
+
 formUser :: Form User
-formUser = renderDivs $ User
-           <$> areq textField "Nome: " Nothing 
-           <*> areq textField "Login: " Nothing
-           <*> areq passwordField "Senha: " Nothing
-           <*> areq (selectFieldList tipo) "Jogador/Treinador" Nothing
-                  where
-                    tipo :: [(Text, Int)]
-                    tipo = [("Jogador", 0), ("Treinador", 1)]
+formUser extra = do
+    (nomeRes, nomeView) <- mreq (textBoxField "Nome") "" Nothing
+    (loginRes, loginView) <- mreq (textBoxField "Login") "" Nothing
+    (senhaRes, senhaView) <- mreq passwordField "Senha: " Nothing
+    (tipoRes, tipoView) <- mreq (selectFieldList tipo) "Jogador/Treinador" Nothing
+    let userRes = User <$> nomeRes <*> loginRes <*> senhaRes <*> tipoRes 
+    let widget = do
+            [whamlet|
+                #{extra}
+                ^{fvInput nomeView}
+                ^{fvInput loginView}
+                ^{fvInput senhaView}
+                ^(fvInput tipoView)
+            |]
+    return (userRes, widget)
 
 formHome :: Form (Text,Text)
-formHome = renderDivs $ (,) <$>
-           areq textField "Login: " Nothing <*>
-           areq passwordField "Senha: " Nothing
+formHome = renderBootstrap3 BootstrapBasicForm $ (,) <$>
+           areq textField (bfs ("Login" :: Text)) Nothing <*>
+           areq passwordField  (bfs ("Senha" :: Text)) Nothing
 
 getCadastroR :: Handler Html
 getCadastroR = do
-           (widget, enctype) <- generateFormPost formUser
-           defaultLayout $ do 
-           [whamlet|
-                 <form method=post enctype=#{enctype} action=@{CadastroR}>
-                     ^{widget}
-                     <input type="submit" value="Enviar">
-           |]
+            (widget, enctype) <- generateFormPost formUser
+            defaultLayout $ do
+                $(whamletFile "templates/cadastro.hamlet")
+                toWidget $ $(luciusFile "templates/cadastro.lucius")
+                addScript $ StaticR js_jquery_js
+                addStylesheet $ StaticR css_bootstrap_css
+                addStylesheet $ StaticR css_font_awesome_css
+                toWidget $ $(juliusFile "templates/cadastro.julius")
 
 postCadastroR :: Handler Html
 postCadastroR = do
@@ -55,12 +81,10 @@ getPerfilR uid = do
         user <- runDB $ get404 uid 
         matchesWon <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
                               WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-                              AND match.setpro > match.setcon") []) :: Handler [(Entity Match)]
+                              AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
         matchesLost <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
                               WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-                              AND match.setpro > match.setcon") []) :: Handler [(Entity Match)]
-                                      
-                              
+                              AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
         defaultLayout $ do
             $(whamletFile "templates/perfil.hamlet")
             toWidget $ $(luciusFile "templates/perfil.lucius")
@@ -82,6 +106,7 @@ getHomeR = do
             defaultLayout $ do
                 $(whamletFile "templates/home.hamlet")
                 toWidget $ $(luciusFile "templates/home.lucius")
+                addScript $ StaticR js_jquery_js
                 addStylesheet $ StaticR css_bootstrap_css
                 addStylesheet $ StaticR css_font_awesome_css
                 toWidget $ $(juliusFile "templates/home.julius")
