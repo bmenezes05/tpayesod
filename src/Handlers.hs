@@ -9,6 +9,7 @@ import Control.Monad.Logger (runStdoutLoggingT)
 import Control.Applicative
 import Data.Text
 import Text.Lucius
+import Text.Julius
 import Database.Persist.Postgresql
 
 mkYesodDispatch "Sitio" pRoutes
@@ -19,12 +20,6 @@ formUser = renderDivs $ User
            <*> areq textField "Login: " Nothing
            <*> areq passwordField "Senha: " Nothing
            <*> areq intField "Tipo: " Nothing
-           
-        --   <*> aopt selectFieldList tipo "Tipo"
-        --     where
-        --         tipo :: [(Text, Int)]
-        --         tipo = [("Jogador", 0), ("Treinador", 1)] 
-           
 
 formHome :: Form (Text,Text)
 formHome = renderDivs $ (,) <$>
@@ -47,9 +42,12 @@ getPerfilR uid = do
       defaultLayout $ do
             $(whamletFile "templates/perfil.hamlet")
             toWidget $ $(luciusFile "templates/perfil.lucius")
+            addScript $ StaticR js_jquery_js
             addScript $ StaticR js_highcharts_js
             addStylesheet $ StaticR css_bootstrap_css
             addStylesheet $ StaticR css_font_awesome_css
+            addStylesheet $ StaticR css_sb_admin_css
+            toWidget $ $(juliusFile "templates/perfil.julius")
 
 postCadastroR :: Handler Html
 postCadastroR = do
@@ -71,11 +69,7 @@ getHomeR = do
                 toWidget $ $(luciusFile "templates/home.lucius")
                 addStylesheet $ StaticR css_bootstrap_css
                 addStylesheet $ StaticR css_font_awesome_css
-                toWidget  [julius|
-                    $('.carousel').carousel({
-                        interval: 5000
-                    })
-                |]
+                toWidget $ $(juliusFile "templates/home.julius")
 
 postHomeR :: Handler Html
 postHomeR = do
