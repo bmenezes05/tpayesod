@@ -1,7 +1,11 @@
-{-# LANGUAGE OverloadedStrings, QuasiQuotes,
-             TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings, TypeFamilies, QuasiQuotes,
+             TemplateHaskell, GADTs, FlexibleInstances,
+             MultiParamTypeClasses, DeriveDataTypeable,
+             GeneralizedNewtypeDeriving, ViewPatterns, EmptyDataDecls #-}
+ 
  
 module Handlers where
+import Prelude hiding (length)
 import Import
 import Yesod
 import Foundation
@@ -19,7 +23,10 @@ formUser = renderDivs $ User
            <$> areq textField "Nome: " Nothing 
            <*> areq textField "Login: " Nothing
            <*> areq passwordField "Senha: " Nothing
-           <*> areq intField "Tipo: " Nothing
+           <*> areq (selectFieldList tipo) "Jogador/Treinador" Nothing
+                  where
+                    tipo :: [(Text, Int)]
+                    tipo = [("Jogador", 0), ("Treinador", 1)]
 
 formHome :: Form (Text,Text)
 formHome = renderDivs $ (,) <$>
@@ -36,10 +43,25 @@ getCadastroR = do
                      <input type="submit" value="Enviar">
            |]
 
+postCadastroR :: Handler Html
+postCadastroR = do
+           ((result, _), _) <- runFormPost formUser
+           case result of 
+               FormSuccess user -> (runDB $ insert user) >>= \piid -> redirect (PerfilR piid)
+               _ -> redirect ErroR
+
 getPerfilR :: UserId -> Handler Html
 getPerfilR uid = do
-      user <- runDB $ get404 uid
-      defaultLayout $ do
+        user <- runDB $ get404 uid 
+        matchesWon <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
+                              WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
+                              AND match.setpro > match.setcon") []) :: Handler [(Entity Match)]
+        matchesLost <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
+                              WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
+                              AND match.setpro > match.setcon") []) :: Handler [(Entity Match)]
+                                      
+                              
+        defaultLayout $ do
             $(whamletFile "templates/perfil.hamlet")
             toWidget $ $(luciusFile "templates/perfil.lucius")
             addScript $ StaticR js_jquery_js
@@ -48,13 +70,6 @@ getPerfilR uid = do
             addStylesheet $ StaticR css_font_awesome_css
             addStylesheet $ StaticR css_sb_admin_css
             toWidget $ $(juliusFile "templates/perfil.julius")
-
-postCadastroR :: Handler Html
-postCadastroR = do
-           ((result, _), _) <- runFormPost formUser
-           case result of 
-               FormSuccess user -> (runDB $ insert user) >>= \piid -> redirect (PerfilR piid)
-               _ -> redirect ErroR
 
 getAdminR :: Handler Html
 getAdminR = defaultLayout [whamlet|

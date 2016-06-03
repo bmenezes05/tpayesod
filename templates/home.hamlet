@@ -10,6 +10,7 @@
           <a class="navbar-brand" href="#"><img src="img/logo.png" style="width: 66px; margin-top: -12px;"></a>
     
         <div id="navbar" class="navbar-collapse collapse">
+          <a href=@{CadastroR}>Não tem uma conta? Cadastre-se!</a>
           <form class="navbar-form navbar-right" method="post" action=@{HomeR}>
             <!-- <div class="form-group">
               <input type="text" id="email" name="email" placeholder="Email" class="form-control">
