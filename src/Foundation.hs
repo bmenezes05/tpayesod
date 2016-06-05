@@ -10,20 +10,14 @@ import Data.Text
 import Database.Persist.Postgresql
     ( ConnectionPool, SqlBackend, runSqlPool, runMigration )
 
-data Sitio = Sitio {getStatic :: Static, connPool :: ConnectionPool }
+data Tpa = Tpa {getStatic :: Static, connPool :: ConnectionPool }
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 User json
    nome Text
    login Text
    senha Text
-   tipo Int
    deriving Show
-   
-PlayerCoach json
-   coachId UserId
-   playerId UserId
-   UniquePlayerCoach coachId playerId
    
 Match json
     userId UserId
@@ -54,20 +48,32 @@ Set json
 
 staticFiles "static"
 
-mkYesodData "Sitio" pRoutes
+mkYesodData "Tpa" pRoutes
 
-mkMessage "Sitio" "messages" "pt-br"
+mkMessage "Tpa" "messages" "pt-br"
 
-instance YesodPersist Sitio where
-   type YesodPersistBackend Sitio = SqlBackend
+instance Yesod Tpa where
+    authRoute _ = Just HomeR
+    
+    isAuthorized HomeR _ = return Authorized
+    isAuthorized ErroR _ = return Authorized
+    isAuthorized CadastroR _ = return Authorized
+    isAuthorized _ _ = isUser
+
+isUser = do
+    mu <- lookupSession "_ID"
+    return $ case mu of
+        Nothing -> AuthenticationRequired
+        Just _ -> Authorized
+
+instance YesodPersist Tpa where
+   type YesodPersistBackend Tpa = SqlBackend
    runDB f = do
        master <- getYesod
        let pool = connPool master
        runSqlPool f pool
-
-instance Yesod Sitio where
-
+        
 type Form a = Html -> MForm Handler (FormResult a, Widget)
 
-instance RenderMessage Sitio FormMessage where
+instance RenderMessage Tpa FormMessage where
     renderMessage _ _ = defaultFormMessage

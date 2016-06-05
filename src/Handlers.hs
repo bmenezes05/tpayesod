@@ -3,7 +3,6 @@
              MultiParamTypeClasses, DeriveDataTypeable,
              GeneralizedNewtypeDeriving, ViewPatterns, EmptyDataDecls #-}
  
- 
 module Handlers where
 import Prelude hiding (length)
 import Import
@@ -15,9 +14,8 @@ import Data.Text
 import Text.Lucius
 import Text.Julius
 import Database.Persist.Postgresql
-import Yesod.Form.Bootstrap3
 
-mkYesodDispatch "Sitio" pRoutes
+mkYesodDispatch "Tpa" pRoutes
 
 textBoxField :: Text -> Field Handler Text
 textBoxField label = Field
@@ -32,31 +30,50 @@ textBoxField label = Field
                   |]
                , fieldEnctype = UrlEncoded
                }
-
-tipo :: [(Text, Int)]
-tipo = [("Jogador", 0), ("Treinador", 1)]
+               
+               
+passwordBoxField :: Text -> Field Handler Text
+passwordBoxField label = Field
+               { fieldParse = \rawVals _ ->
+                 case rawVals of
+                   [a] -> return $ Right $ Just a
+                   [] -> return $ Right Nothing
+               , fieldView = \idAttr nameAttr otherAttrs eResult isReq ->
+                 [whamlet|
+                    <div class="form-group">
+                        <input type="password" id=#{idAttr} name=#{nameAttr} placeholder=#{label} class="form-control">
+                  |]
+               , fieldEnctype = UrlEncoded
+               }
 
 formUser :: Form User
 formUser extra = do
     (nomeRes, nomeView) <- mreq (textBoxField "Nome") "" Nothing
     (loginRes, loginView) <- mreq (textBoxField "Login") "" Nothing
-    (senhaRes, senhaView) <- mreq passwordField "Senha: " Nothing
-    (tipoRes, tipoView) <- mreq (selectFieldList tipo) "Jogador/Treinador" Nothing
-    let userRes = User <$> nomeRes <*> loginRes <*> senhaRes <*> tipoRes 
+    (senhaRes, senhaView) <- mreq (passwordBoxField "Senha") "" Nothing
+    let userRes = User <$> nomeRes <*> loginRes <*> senhaRes 
     let widget = do
             [whamlet|
                 #{extra}
                 ^{fvInput nomeView}
                 ^{fvInput loginView}
                 ^{fvInput senhaView}
-                ^(fvInput tipoView)
             |]
     return (userRes, widget)
 
 formHome :: Form (Text,Text)
-formHome = renderBootstrap3 BootstrapBasicForm $ (,) <$>
-           areq textField (bfs ("Login" :: Text)) Nothing <*>
-           areq passwordField  (bfs ("Senha" :: Text)) Nothing
+formHome extra = do
+        (loginRes, loginView) <- mreq (textBoxField "Login") "" Nothing
+        (senhaRes, senhaView) <- mreq (passwordBoxField "Senha") "" Nothing
+        let userRes = (,) <$> loginRes <*> senhaRes
+        let widget = do
+            [whamlet|
+                #{extra}
+                ^{fvInput loginView}
+                ^{fvInput senhaView}
+            |]
+        return (userRes, widget)
+        
 
 getCadastroR :: Handler Html
 getCadastroR = do
@@ -66,7 +83,7 @@ getCadastroR = do
                 toWidget $ $(luciusFile "templates/cadastro.lucius")
                 addScript $ StaticR js_jquery_js
                 addStylesheet $ StaticR css_bootstrap_css
-                addStylesheet $ StaticR css_font_awesome_css
+                addScript $ StaticR js_bootstrap_js
                 toWidget $ $(juliusFile "templates/cadastro.julius")
 
 postCadastroR :: Handler Html
@@ -82,23 +99,20 @@ getPerfilR uid = do
         matchesWon <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
                               WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
                               AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
+                              
         matchesLost <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
                               WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
                               AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
+                              
         defaultLayout $ do
             $(whamletFile "templates/perfil.hamlet")
             toWidget $ $(luciusFile "templates/perfil.lucius")
             addScript $ StaticR js_jquery_js
             addScript $ StaticR js_highcharts_js
+            addScript $ StaticR js_bootstrap_js
             addStylesheet $ StaticR css_bootstrap_css
-            addStylesheet $ StaticR css_font_awesome_css
             addStylesheet $ StaticR css_sb_admin_css
             toWidget $ $(juliusFile "templates/perfil.julius")
-
-getAdminR :: Handler Html
-getAdminR = defaultLayout [whamlet|
-    <h1> Bem-vindo meu Rei!
-|]
 
 getHomeR :: Handler Html
 getHomeR = do
@@ -108,14 +122,13 @@ getHomeR = do
                 toWidget $ $(luciusFile "templates/home.lucius")
                 addScript $ StaticR js_jquery_js
                 addStylesheet $ StaticR css_bootstrap_css
-                addStylesheet $ StaticR css_font_awesome_css
+                addScript $ StaticR js_bootstrap_js
                 toWidget $ $(juliusFile "templates/home.julius")
 
 postHomeR :: Handler Html
 postHomeR = do
            ((result, _), _) <- runFormPost formHome
            case result of 
-               FormSuccess ("admin","admin") -> setSession "_ID" "admin" >> redirect AdminR
                FormSuccess (login,senha) -> do 
                    user <- runDB $ selectFirst [UserLogin ==. login, UserSenha ==. senha] []
                    case user of
@@ -130,6 +143,25 @@ getErroR = defaultLayout [whamlet|
 getLogoutR :: Handler Html
 getLogoutR = do
      deleteSession "_ID"
-     defaultLayout [whamlet| 
-         <h1> ADEUS!
-     |]
+     redirect HomeR
+     
+getServiceR :: UserId -> Handler Html
+getServiceR uid = do
+        user <- runDB $ get404 uid 
+        matchesWon <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
+                              WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
+                              AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
+                              
+        matchesLost <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
+                              WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
+                              AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
+                              
+        defaultLayout $ do
+            $(whamletFile "templates/service.hamlet")
+            toWidget $ $(luciusFile "templates/service.lucius")
+            addScript $ StaticR js_jquery_js
+            addScript $ StaticR js_highcharts_js
+            addScript $ StaticR js_bootstrap_js
+            addStylesheet $ StaticR css_bootstrap_css
+            addStylesheet $ StaticR css_sb_admin_css
+            toWidget $ $(juliusFile "templates/service.julius")     

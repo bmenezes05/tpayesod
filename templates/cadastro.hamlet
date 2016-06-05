@@ -10,19 +10,12 @@
           <a class="navbar-brand" href="#"><img src=@{StaticR img_logo_png} style="width: 66px; margin-top: -12px;"></a>
     
         <div id="navbar" class="navbar-collapse collapse">
-          <a href=@{HomeR}>Já possui uma conta? Faça o login</a>
           <form class="navbar-form navbar-right" method="post" action=@{HomeR}>
-            <!-- <div class="form-group">
-              <input type="text" id="email" name="email" placeholder="Email" class="form-control">
-    
-            <div class="form-group">
-              <input type="password" id="password" name="password" placeholder="Password" class="form-control">
-              -->
             ^{widget}
-    
             <button type="submit" name="submit" class="btn btn-success">Sign in</button>
+            
+            <a href=@{HomeR}> <strong> Faça o login! </strong> </a>
 
-<!-- Full Page Image Background Carousel Header -->
 <header id="myCarousel" class="carousel slide">
     
     <ol class="carousel-indicators">
@@ -30,39 +23,26 @@
         <li data-target="#myCarousel" data-slide-to="1">
         <li data-target="#myCarousel" data-slide-to="2">
     
-
-    <!-- Wrapper for Slides -->
     <div class="carousel-inner">
         <div class="item active">
-            <!-- Set the first background image using inline CSS below. -->
-            <div class="fill" style="background-image:url('img/image1.jpg');">
+            <div class="fill" style="background-image:url('@{StaticR img_image1_jpg});">
             <div class="carousel-caption">
-                <h2>Caption 1
+                <h2>
             
         
         <div class="item">
-            <!-- Set the second background image using inline CSS below. -->
-            <div class="fill" style="background-image:url('img/image2.jpg');">
+            <div class="fill" style="background-image:url('@{StaticR img_image2_jpg}');">
             <div class="carousel-caption">
-                <h2>Caption 2</h2>
+                <h2>
             
         
         <div class="item">
-            <!-- Set the third background image using inline CSS below. -->
-            <div class="fill" style="background-image:url('img/image3.jpg');">
+            <div class="fill" style="background-image:url('@{StaticR img_image3_jpg}');">
             <div class="carousel-caption">
-                <h2>Caption 3
+                <h2>
             
-        
-    
-
-    <!-- Controls -->
     <a class="left carousel-control" href="#myCarousel" data-slide="prev">
         <span class="icon-prev">
     
     <a class="right carousel-control" href="#myCarousel" data-slide="next">
-        <span class="icon-next">>
-    
-
-
-                
+        <span class="icon-next">
