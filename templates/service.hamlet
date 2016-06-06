@@ -13,7 +13,7 @@
         <a href="#"><input type="button" value="New Match" class="btn btn-success" style=" margin-left: 36%; margin-top: 10px; padding: 18px; width: 200px;">
         <ul class="nav navbar-right top-nav">            
             <li class="dropdown" style="margin-top: 14px;">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Welcome #{userNome user} <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> </a>
                 <ul class="dropdown-menu">                        
                     <li>
                         <a href="@{LogoutR}"><i class="fa fa-fw fa-power-off"></i> Log Out
@@ -24,7 +24,7 @@
                     <a href="#"><i class="fa fa-fw fa-dashboard"></i> Home
                     
                 <li>
-                    <a href="#"><i class="fa fa-fw fa-bar-chart-o"></i> Service Stats
+                    <a href="@{ServiceR}"><i class="fa fa-fw fa-bar-chart-o"></i> Service Stats
                 
                 <li>
                     <a href="#"><i class="fa fa-fw fa-table"></i> Winner Stats
@@ -36,106 +36,97 @@
                     <a href="#"><i class="fa fa-fw fa-desktop"></i> Tips
     
     <div id="page-wrapper">
-            <div class="container-fluid">
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Home <small>Statistics Overview
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                            <i class="fa fa-info-circle"></i>  <strong>Need improvement on backhand!
-
-                <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        
-                                        <i class="fa fa-comments fa-5x"></i>
-                                        
-                                    
-                                        
-                                        <img src=@{StaticR img_logo_png} style="width: 70px; height:70px">
-                                    
-                                    
-                                    
-                                    <div class="col-xs-9 text-right">
-                                        <div class="huge">4 W 11 L
-                                        
-                                        <div>Matches
-                                        
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-green">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-comments fa-5x"></i>
-                                    
-                                    <div class="col-xs-9 text-right">
-                                        <div class="huge">50
-                                        <div>Sets won
-                                        
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-red">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-comments fa-5x"></i>
-                                    <div class="col-xs-9 text-right">
-                                        <div class="huge">42
-                                        <div>Sets lost
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Last Matches
-                            
-                            <div class="panel-body">
-                                <div id="container" style="width:100%; height:400px;"> 
-
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Games Won/Lost
-                            
-                            <div class="panel-body">
-                                <div id="games" style="width:100%; height:400px;">
-                            
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Sets Won/Lost
-                            
-                            <div class="panel-body">
-                                <div id="sets" style="width:100%; height:400px;">
-                          
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="glyphicon glyphicon-calendar"></i>Last Matches 
-                            
-                            <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Date
-                                                <th>Opponent
-                                                <th>Surface
-                                                <th>Result
-                                                <th>Details
-                                            
-                                        <tbody>
-                                            <tr class="success">
-                                                <td> 10/10/2016 
-                                                <td> Kleberson Santos
-                                                <td> Saibro
-                                                <td> Won
-                                                <td><a href="#"> View Details
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Service Stats <small>Statistics Overview</small>
+    
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">26</div>
+                                    <div>Aces</div>
+                                
+                        <a href="#"></a>
+                    
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-tasks fa-5x"></i>
+                                
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">12</div>
+                                    <div>Double Faults</div>
+                                
+                        <a href="#"></a>
+                    
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Aces</h3>
+                        
+                        <div class="panel-body">
+                            <div id="aces" style="width:100%; height:400px;"></div>
+                        
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Double Faults</h3>
+                        
+                        <div class="panel-body">
+                            <div id="double_faults" style="width:100%; height:400px;"></div>
+                        
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> First Serve In</h3>
+                        
+                        <div class="panel-body">
+                            <div id="first_serve" style="width:100%; height:400px;"></div>
+                         
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Serving Points Won/Lost</h3>
+                        
+                        <div class="panel-body">
+                            <div id="serving_points" style="width:100%; height:400px;"></div>
+                           
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Receiving Points Won/Lost</h3>
+                        
+                        <div class="panel-body">
+                            <div id="receiving_points" style="width:100%; height:400px;"></div>
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="glyphicon glyphicon-calendar"></i> Number stats </h3>
+                        
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Total serving points</th>
+                                            <th>Won</th>
+                                            <th>Lost</th>
+                                            <th>Aces</th>
+                                            <th>Double faults</th>
+                                    <tbody>
+                                        <tr class="success">
+                                            <td>500</td>
+                                            <td>305</td>
+                                            <td>195</td>
+                                            <td>28</td>
+                                            <td>43</a></td>

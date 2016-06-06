@@ -1,0 +1,124 @@
+$(function () { 
+    $('#container').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Matches Points Stats'
+        },
+        yAxis: {
+            title: {
+                text: 'Points'
+            }
+        },
+        xAxis: {
+        },
+        series: [{
+            name: 'Points Won',
+            data: [ 50, 54, 42 ],
+            color: '#083'
+        }, {
+            name: 'Points Lost',
+            data: [ 40, 30, 32 ],
+            color: '#C20' 
+        }]
+    });
+});
+$(function () { 
+    $('#games').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Games Stats'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+        },
+        series: [{
+            type: 'pie',
+                name: 'Games',
+                    data: [
+                        {
+                            name: 'Games won',  
+                            y: 47,
+                            sliced: true,
+                            selected: true,
+                            color: '#083'
+                        },
+                        {
+                            name: 'Games lost',  
+                            y: 53,
+                            sliced: true,
+                            selected: true,
+                            color: '#C20'
+                        }                           
+                    ]
+        }]
+    });
+});
+	
+$(function () { 
+    $('#sets').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Games Stats'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+            },
+            series: [{
+                type: 'pie',
+                    name: 'Sets',
+                        data: [
+                            {
+                                name: 'Sets won',  
+                                y: 32,
+                                sliced: true,
+                                selected: true,
+                                color: '#083'
+                            },
+                            {
+                                name: 'Sets lost',  
+                                y: 68,
+                                sliced: true,
+                                selected: true,
+                                color: '#C20'
+                            }                           
+                        ]
+            }]
+    });
+});
+    

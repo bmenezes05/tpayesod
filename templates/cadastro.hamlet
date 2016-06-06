@@ -10,7 +10,7 @@
           <a class="navbar-brand" href="#"><img src=@{StaticR img_logo_png} style="width: 66px; margin-top: -12px;"></a>
     
         <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" method="post" action=@{HomeR}>
+          <form class="navbar-form navbar-right" method="post" action=@{CadastroR}>
             ^{widget}
             <button type="submit" name="submit" class="btn btn-success">Sign in</button>
             

@@ -7,13 +7,17 @@ module Handlers where
 import Prelude hiding (length)
 import Import
 import Yesod
+import Yesod.Form.Jquery
 import Foundation
 import Control.Monad.Logger (runStdoutLoggingT)
 import Control.Applicative
-import Data.Text
+import Data.Text (Text)
+import Data.Time
+import qualified Data.Text as T hiding (count)
 import Text.Lucius
 import Text.Julius
 import Database.Persist.Postgresql
+import Yesod.Form.Bootstrap3
 
 mkYesodDispatch "Tpa" pRoutes
 
@@ -45,7 +49,7 @@ passwordBoxField label = Field
                   |]
                , fieldEnctype = UrlEncoded
                }
-
+               
 formUser :: Form User
 formUser extra = do
     (nomeRes, nomeView) <- mreq (textBoxField "Nome") "" Nothing
@@ -73,18 +77,25 @@ formHome extra = do
                 ^{fvInput senhaView}
             |]
         return (userRes, widget)
-        
 
+formMatch :: Form Match
+formMatch = renderDivs $ Match <$>
+            areq hiddenField "UserId" Nothing <*>
+            areq textField "Nome do Oponente" Nothing <*>
+            lift (liftIO getCurrentTime) <*>
+            areq intField "Sets a favor" Nothing <*>
+            areq intField "Sets contra" Nothing
+            
 getCadastroR :: Handler Html
 getCadastroR = do
             (widget, enctype) <- generateFormPost formUser
             defaultLayout $ do
                 $(whamletFile "templates/cadastro.hamlet")
                 toWidget $ $(luciusFile "templates/cadastro.lucius")
+                toWidget $ $(juliusFile "templates/cadastro.julius")
                 addScript $ StaticR js_jquery_js
                 addStylesheet $ StaticR css_bootstrap_css
                 addScript $ StaticR js_bootstrap_js
-                toWidget $ $(juliusFile "templates/cadastro.julius")
 
 postCadastroR :: Handler Html
 postCadastroR = do
@@ -95,24 +106,26 @@ postCadastroR = do
 
 getPerfilR :: UserId -> Handler Html
 getPerfilR uid = do
-        user <- runDB $ get404 uid 
-        matchesWon <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
-                              WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-                              AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
-                              
-        matchesLost <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
-                              WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-                              AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
+        user <- runDB $ get404 uid
+        
+        -- user <- runDB $ (rawSql (pack $ "SELECT ?? FROM user WHERE user.user_id= " ++ (show $ unpack $ lookupSession "_ID")) []) :: Handler [(Entity User)]
+                        
+        matchesWon <- runDB $ count ([] :: [Filter Match])                
+        matchesLost <- runDB $ count ([] :: [Filter Match])                
+        
+        -- matchesWon <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
+        --                      WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
+        --                      AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
                               
         defaultLayout $ do
             $(whamletFile "templates/perfil.hamlet")
             toWidget $ $(luciusFile "templates/perfil.lucius")
+            toWidget $ $(juliusFile "templates/perfil.julius")
             addScript $ StaticR js_jquery_js
             addScript $ StaticR js_highcharts_js
             addScript $ StaticR js_bootstrap_js
             addStylesheet $ StaticR css_bootstrap_css
             addStylesheet $ StaticR css_sb_admin_css
-            toWidget $ $(juliusFile "templates/perfil.julius")
 
 getHomeR :: Handler Html
 getHomeR = do
@@ -120,10 +133,11 @@ getHomeR = do
             defaultLayout $ do
                 $(whamletFile "templates/home.hamlet")
                 toWidget $ $(luciusFile "templates/home.lucius")
+                toWidget $ $(juliusFile "templates/home.julius")
                 addScript $ StaticR js_jquery_js
                 addStylesheet $ StaticR css_bootstrap_css
                 addScript $ StaticR js_bootstrap_js
-                toWidget $ $(juliusFile "templates/home.julius")
+                
 
 postHomeR :: Handler Html
 postHomeR = do
@@ -133,7 +147,7 @@ postHomeR = do
                    user <- runDB $ selectFirst [UserLogin ==. login, UserSenha ==. senha] []
                    case user of
                        Nothing -> redirect HomeR
-                       Just (Entity uid u) -> setSession "_ID" (pack $ show $ fromSqlKey uid) >> redirect (PerfilR uid)
+                       Just (Entity uid u) -> setSession "_ID" (T.pack $ show $ fromSqlKey uid) >> redirect (PerfilR uid)
 
 getErroR :: Handler Html
 getErroR = defaultLayout [whamlet|
@@ -145,23 +159,33 @@ getLogoutR = do
      deleteSession "_ID"
      redirect HomeR
      
-getServiceR :: UserId -> Handler Html
-getServiceR uid = do
-        user <- runDB $ get404 uid 
-        matchesWon <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
-                              WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-                              AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
-                              
-        matchesLost <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
-                              WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-                              AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
-                              
+getServiceR :: Handler Html
+getServiceR = do
         defaultLayout $ do
             $(whamletFile "templates/service.hamlet")
             toWidget $ $(luciusFile "templates/service.lucius")
+            toWidget $ $(juliusFile "templates/service.julius")     
             addScript $ StaticR js_jquery_js
             addScript $ StaticR js_highcharts_js
             addScript $ StaticR js_bootstrap_js
             addStylesheet $ StaticR css_bootstrap_css
             addStylesheet $ StaticR css_sb_admin_css
-            toWidget $ $(juliusFile "templates/service.julius")     
+            
+getNewmatchR :: Handler Html
+getNewmatchR = do
+        (widget, enctype) <- generateFormPost formMatch
+        defaultLayout $ do
+            $(whamletFile "templates/newmatch.hamlet")
+            toWidget $ $(luciusFile "templates/newmatch.lucius")
+            toWidget $ $(juliusFile "templates/newmatch.julius")                 
+            addScript $ StaticR js_jquery_js
+            addScript $ StaticR js_bootstrap_js
+            addStylesheet $ StaticR css_bootstrap_css
+            addStylesheet $ StaticR css_sb_admin_css
+            
+postNewmatchR :: Handler Html
+postNewmatchR = do
+           ((result, _), _) <- runFormPost formMatch
+           case result of 
+               FormSuccess match -> (runDB $ insert match) >>= \piid -> redirect (ServiceR)
+               _ -> redirect ErroR            

@@ -1,12 +1,15 @@
 {-# LANGUAGE OverloadedStrings, TypeFamilies, QuasiQuotes,
              TemplateHaskell, GADTs, FlexibleContexts,
              MultiParamTypeClasses, DeriveDataTypeable,
-             GeneralizedNewtypeDeriving, ViewPatterns #-}
+             GeneralizedNewtypeDeriving, EmptyDataDecls, ViewPatterns #-}
 module Foundation where
 import Import
 import Yesod
 import Yesod.Static
-import Data.Text
+import Data.Text (Text)
+import Data.Time
+import qualified Data.Text as T
+import Control.Applicative
 import Database.Persist.Postgresql
     ( ConnectionPool, SqlBackend, runSqlPool, runMigration )
 
@@ -22,6 +25,7 @@ User json
 Match json
     userId UserId
     opponentName Text
+    date UTCTime default=now()
     setPro Int
     setCon Int
     deriving Show

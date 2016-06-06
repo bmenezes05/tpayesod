@@ -8,7 +8,8 @@ pRoutes = [parseRoutes|
    /erro ErroR GET
    /cadastro CadastroR GET POST
    /perfil/#UserId PerfilR GET
-   /service/#UserId ServiceR GET
    /logout LogoutR GET
+   /service ServiceR GET
+   /newmatch NewmatchR GET POST
    /static StaticR Static getStatic
 |]
