@@ -12,7 +12,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" method="post" action=@{CadastroR}>
             ^{widget}
-            <button type="submit" name="submit" class="btn btn-success">Sign in</button>
+            <button type="submit" name="submit" class="btn btn-success">Entrar</button>
             
             <a href=@{HomeR}> <strong> Faça o login! </strong> </a>
 

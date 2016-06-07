@@ -9,7 +9,7 @@ pRoutes = [parseRoutes|
    /cadastro CadastroR GET POST
    /perfil/#UserId PerfilR GET
    /logout LogoutR GET
-   /service ServiceR GET
-   /newmatch NewmatchR GET POST
+   /service/#UserId ServiceR GET
+   /newmatch/#UserId NewmatchR GET 
    /static StaticR Static getStatic
 |]

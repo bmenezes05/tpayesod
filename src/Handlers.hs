@@ -4,7 +4,7 @@
              GeneralizedNewtypeDeriving, ViewPatterns, EmptyDataDecls #-}
  
 module Handlers where
-import Prelude hiding (length)
+import Prelude
 import Import
 import Yesod
 import Yesod.Form.Jquery
@@ -53,6 +53,7 @@ passwordBoxField label = Field
 formUser :: Form User
 formUser extra = do
     (nomeRes, nomeView) <- mreq (textBoxField "Nome") "" Nothing
+                           
     (loginRes, loginView) <- mreq (textBoxField "Login") "" Nothing
     (senhaRes, senhaView) <- mreq (passwordBoxField "Senha") "" Nothing
     let userRes = User <$> nomeRes <*> loginRes <*> senhaRes 
@@ -80,7 +81,7 @@ formHome extra = do
 
 formMatch :: Form Match
 formMatch = renderDivs $ Match <$>
-            areq hiddenField "UserId" Nothing <*>
+            areq hiddenField "" Nothing <*>
             areq textField "Nome do Oponente" Nothing <*>
             lift (liftIO getCurrentTime) <*>
             areq intField "Sets a favor" Nothing <*>
@@ -110,12 +111,15 @@ getPerfilR uid = do
         
         -- user <- runDB $ (rawSql (pack $ "SELECT ?? FROM user WHERE user.user_id= " ++ (show $ unpack $ lookupSession "_ID")) []) :: Handler [(Entity User)]
                         
-        matchesWon <- runDB $ count ([] :: [Filter Match])                
-        matchesLost <- runDB $ count ([] :: [Filter Match])                
-        
-        -- matchesWon <- runDB $ (rawSql (pack $ "SELECT ?? FROM match \
-        --                      WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-        --                      AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
+        matchesWon <- runDB $ (rawSql (T.pack $ "SELECT ?? FROM match \
+                      WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
+                      AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
+                      
+        matchesLost <- runDB $ (rawSql (T.pack $ "SELECT ?? FROM match \
+                    WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
+                    AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
+                      
+                      
                               
         defaultLayout $ do
             $(whamletFile "templates/perfil.hamlet")
@@ -159,8 +163,10 @@ getLogoutR = do
      deleteSession "_ID"
      redirect HomeR
      
-getServiceR :: Handler Html
-getServiceR = do
+     
+getServiceR :: UserId -> Handler Html
+getServiceR uid = do
+        user <- runDB $ get404 uid     
         defaultLayout $ do
             $(whamletFile "templates/service.hamlet")
             toWidget $ $(luciusFile "templates/service.lucius")
@@ -171,8 +177,8 @@ getServiceR = do
             addStylesheet $ StaticR css_bootstrap_css
             addStylesheet $ StaticR css_sb_admin_css
             
-getNewmatchR :: Handler Html
-getNewmatchR = do
+getNewmatchR :: UserId -> Handler Html
+getNewmatchR uid = do
         (widget, enctype) <- generateFormPost formMatch
         defaultLayout $ do
             $(whamletFile "templates/newmatch.hamlet")
@@ -183,9 +189,3 @@ getNewmatchR = do
             addStylesheet $ StaticR css_bootstrap_css
             addStylesheet $ StaticR css_sb_admin_css
             
-postNewmatchR :: Handler Html
-postNewmatchR = do
-           ((result, _), _) <- runFormPost formMatch
-           case result of 
-               FormSuccess match -> (runDB $ insert match) >>= \piid -> redirect (ServiceR)
-               _ -> redirect ErroR            
