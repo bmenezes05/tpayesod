@@ -30,21 +30,21 @@
             <!-- Set the first background image using inline CSS below. -->
             <div class="fill" style="background-image:url('@{StaticR img_image1_jpg});">
             <div class="carousel-caption">
-                <h2>Caption 1
+                <h2>
             
         
         <div class="item">
             <!-- Set the second background image using inline CSS below. -->
             <div class="fill" style="background-image:url('@{StaticR img_image2_jpg}');">
             <div class="carousel-caption">
-                <h2>Caption 2</h2>
+                <h2>
             
         
         <div class="item">
             <!-- Set the third background image using inline CSS below. -->
             <div class="fill" style="background-image:url('@{StaticR img_image3_jpg}');">
             <div class="carousel-caption">
-                <h2>Caption 3
+                <h2>
             
         
     
