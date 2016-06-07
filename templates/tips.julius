@@ -1,0 +1,245 @@
+$(function () { 
+    $('#aces').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Aces'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+            },
+            series: [{
+                type: 'pie',
+                    name: 'Percentage',
+                        data: [
+                            {
+                                name: 'Aces',  
+                                y: 73.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#083'
+                            },
+                            {
+                                name: 'Other',  
+                                y: 27.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#C20'
+                            }                           
+                        ]
+            }]
+    });
+    });
+	
+	$(function () { 
+    $('#double_faults').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Double Faults'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+            },
+            series: [{
+                type: 'pie',
+                    name: 'Percentage',
+                        data: [
+                            {
+                                name: 'Double faults',  
+                                y: 73.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#083'
+                            },
+                            {
+                                name: 'Other',  
+                                y: 27.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#C20'
+                            }                           
+                        ]
+            }]
+    });
+    });
+    
+	$(function () { 
+    $('#first_serve').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'First Serve'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+            },
+            series: [{
+                type: 'pie',
+                    name: 'Percentage',
+                        data: [
+                            {
+                                name: 'In',  
+                                y: 73.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#083'
+                            },
+                            {
+                                name: 'Out',  
+                                y: 27.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#C20'
+                            }                           
+                        ]
+            }]
+    });
+    });
+	
+	$(function () { 
+    $('#serving_points').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Serving Points'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+            },
+            series: [{
+                type: 'pie',
+                    name: 'Percentage',
+                        data: [
+                            {
+                                name: 'Won',  
+                                y: 73.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#083'
+                            },
+                            {
+                                name: 'Lost',  
+                                y: 27.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#C20'
+                            }                           
+                        ]
+            }]
+    });
+    });
+	
+    $(function () { 
+    $('#receiving_points').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Receiving Points'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+            },
+            series: [{
+                type: 'pie',
+                    name: 'Percentage',
+                        data: [
+                            {
+                                name: 'Won',  
+                                y: 73.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#083'
+                            },
+                            {
+                                name: 'Lost',  
+                                y: 27.0,
+                                sliced: true,
+                                selected: true,
+                                color: '#C20'
+                            }                           
+                        ]
+            }]
+    });
+    });
+	

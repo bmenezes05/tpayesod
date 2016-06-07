@@ -127,16 +127,13 @@
                                     <table class="table table-bordered table-hover table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Date
                                                 <th>Opponent
                                                 <th>Surface
                                                 <th>Result
-                                                <th>Details
-                                            
+                                                
                                         <tbody>
-                                            <tr class="success">
-                                                <td> 10/10/2016 
-                                                <td> Kleberson Santos
-                                                <td> Saibro
-                                                <td> Won
-                                                <td><a href="#"> View Details
+                                            $forall Entity mid match <- matches
+                                                <tr>
+                                                    <td> #{matchOpponentName match}
+                                                    <td> #{matchSurface match}
+                                                    <td> #{matchSetPro match} - #{matchSetCon match}

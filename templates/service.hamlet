@@ -21,7 +21,7 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav" style="top:80px;">
                 <li class="active">
-                    <a href="@{PerfilR uid}"><i class="fa fa-fw fa-dashboard"></i> Home
+                    <a href="@{PerfilR uid}"><i class="fa fa-fw fa-dashboard"></i>  _{MsgHome}
                     
                 <li>
                     <a href="@{ServiceR uid}"><i class="fa fa-fw fa-bar-chart-o"></i> Service Stats
@@ -68,7 +68,8 @@
                                     <div>Double Faults</div>
                                 
                         <a href="#"></a>
-                    
+                <div class="row"></div>
+                
                 <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">

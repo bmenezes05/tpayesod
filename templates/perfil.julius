@@ -1,25 +1,32 @@
 $(function () { 
     $('#container').highcharts({
         chart: {
-            type: 'line'
+            type: 'bar'
         },
         title: {
-            text: 'Matches Points Stats'
+            text: 'Matches Sets Stats'
         },
         yAxis: {
             title: {
-                text: 'Points'
+                text: 'Sets'
             }
         },
         xAxis: {
+            title: {
+                text: 'Matches'
+            }
         },
         series: [{
-            name: 'Points Won',
-            data: [ 50, 54, 42 ],
+            name: 'Sets Won',
+            data: [ 
+                6
+            ],
             color: '#083'
         }, {
-            name: 'Points Lost',
-            data: [ 40, 30, 32 ],
+            name: 'Sets Lost',
+            data: [ 
+                5
+            ],
             color: '#C20' 
         }]
     });

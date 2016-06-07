@@ -25,6 +25,7 @@ User json
 Match json
     userId UserId
     opponentName Text
+    surface Text default=''
     date UTCTime default=now()
     setPro Int
     setCon Int
