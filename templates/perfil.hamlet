@@ -21,19 +21,13 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav" style="top:80px;">
                 <li class="active">
-                    <a href="@{PerfilR uid}"><img src=@{StaticR img_inic_png} style="width: 18px; height:14px"> Home
+                    <a href="@{PerfilR uid}"><img src=@{StaticR img_inic_png} style="width: 18px; height:14px"> _{MsgHome}
                     
                 <li>
-                    <a href="@{ServiceR uid}"><img src=@{StaticR img_grafico_png} style="width: 18px; height:14px"> Service Stats
+                    <a href="@{ServiceR uid}"><img src=@{StaticR img_grafico_png} style="width: 18px; height:14px"> _{MsgServiceStats}
                 
                 <li>
-                    <a href="#"><img src=@{StaticR img_jogador1_png} style="width: 18px; height:14px"> Winner Stats
-                
-                <li>
-                    <a href="#"><img src=@{StaticR img_bola_png} style="width: 14px; height:18px"> Unforced errors stats
-                
-                <li>
-                    <a href="#"><img src=@{StaticR img_trofeu_png} style="width: 18px; height:14px"> Tips
+                    <a href="@{TipsR uid}"><img src=@{StaticR img_trofeu_png} style="width: 18px; height:14px"> _{MsgTips}
     
     <div id="page-wrapper">
             <div class="container-fluid">
@@ -47,7 +41,7 @@
                     <div class="col-lg-12">
                         <div class="alert alert-info alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                            <i class="fa fa-info-circle"></i>  <strong>Need improvement on backhand!
+                            <img src=@{StaticR img_conversation1_png} style="width: 18px; height:14px">  <strong>Need improvement on backhand!
 
                 <div class="row">
                     <div class="col-lg-3 col-md-6">
@@ -75,7 +69,7 @@
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <i class="fa fa-comments fa-5x"></i>
+                                        
                                     
                                     <div class="col-xs-9 text-right">
                                         <div class="huge"> 20
@@ -86,7 +80,7 @@
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <i class="fa fa-comments fa-5x"></i>
+                                        
                                     <div class="col-xs-9 text-right">
                                         <div class="huge"> 10
                                         <div>Sets lost
@@ -120,7 +114,7 @@
                     <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="glyphicon glyphicon-calendar"></i>Last Matches 
+                                <h3 class="panel-title"> Last Matches 
                             
                             <div class="panel-body">
                                 <div class="table-responsive">

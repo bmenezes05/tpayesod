@@ -19,13 +19,13 @@ $(function () {
         series: [{
             name: 'Sets Won',
             data: [ 
-                6
+                #{rawJS $ show $ (Prelude.length matchesWon) }, 7, 1
             ],
             color: '#083'
         }, {
             name: 'Sets Lost',
             data: [ 
-                5
+                7, 4, 7 
             ],
             color: '#C20' 
         }]

@@ -136,6 +136,10 @@ getPerfilR uid = do
         
         matches <- runDB $ selectList [MatchUserId ==. uid] []
         
+        sets <- runDB $ (rawSql (T.pack $ "SELECT ??, ?? FROM match \
+                INNER JOIN set ON match.id=set.match_id \
+                WHERE match.user_id= " ++ (show $ fromSqlKey uid)) []) :: Handler [(Entity Match, Entity Set)]
+        
         matchesWon <- runDB $ (rawSql (T.pack $ "SELECT ?? FROM match \
                       WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
                       AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
@@ -224,10 +228,6 @@ postNewsetR uid mid = do
 getTipsR :: UserId -> Handler Html
 getTipsR uid = do
         user <- runDB $ get404 uid   
-        
-        sets <- runDB $ (rawSql (T.pack $ "SELECT ??, ?? FROM match \
-                INNER JOIN set ON match.id=set.match_id \
-                WHERE match.user_id= " ++ (show $ fromSqlKey uid)) []) :: Handler [(Entity Match, Entity Set)]
         
         defaultLayout $ do
             $(whamletFile "templates/tips.hamlet")

@@ -21,20 +21,13 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav" style="top:80px;">
                 <li class="active">
-                    <a href="@{PerfilR uid}"><img src=@{StaticR img_inic_png} style="width: 14px; height:18px">
-                    > _{MsgHome}
+                    <a href="@{PerfilR uid}"><img src=@{StaticR img_inic_png} style="width: 18px; height:14px"> Home
                     
                 <li>
-                    <a href="@{ServiceR uid}"><i class="fa fa-fw fa-bar-chart-o"></i> Service Stats
+                    <a href="@{ServiceR uid}"><img src=@{StaticR img_grafico_png} style="width: 18px; height:14px"> Service Stats
                 
                 <li>
-                    <a href="#"><i class="fa fa-fw fa-table"></i> Winner Stats
-                
-                <li>
-                    <a href="#"><i class="fa fa-fw fa-edit"></i> Unforced errors stats
-                
-                <li>
-                    <a href="#"><i class="fa fa-fw fa-desktop"></i> Tips
+                    <a href="@{TipsR uid}"><img src=@{StaticR img_trofeu_png} style="width: 18px; height:14px"> Tips
     
     <div id="page-wrapper">
             <div class="container-fluid">

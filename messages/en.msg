@@ -6,7 +6,7 @@ NewMatch: New Match
 
 Welcome: Welcome
 
-StatisticsOverview: Home Statistics Overview 
+StatisticsOverview: Statistics Overview 
 
 NeedImprovementonbackhand: Need Improvement on backhand! 
 
