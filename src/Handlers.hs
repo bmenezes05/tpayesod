@@ -82,29 +82,29 @@ formHome extra = do
 formMatch :: UserId -> Form Match
 formMatch uid = renderDivs $ Match <$>
             areq hiddenField "" (Just uid) <*>
-            areq textField "Nome do Oponente" Nothing <*>
+            areq textField (bfs ("Nome do Oponente" :: Text)) Nothing <*>
             lift (liftIO getCurrentTime) <*>
-            areq intField "Sets a favor" Nothing <*>
-            areq intField "Sets contra" Nothing
+            areq intField (bfs ("Sets a favor" :: Text)) Nothing <*>
+            areq intField (bfs ("Sets contra" :: Text)) Nothing
             
 formSet :: MatchId -> Form Set
 formSet mid = renderDivs $ Set <$>
               areq hiddenField "" (Just mid) <*>
-              areq intField "Games a favor" Nothing <*>
-              areq intField "Games contra" Nothing <*>
-              areq intField "Pontos sacando" Nothing <*>
-              areq intField "Pontos recebendo saque" Nothing <*>
-              areq intField "Saques certos de primeira" Nothing <*>
-              areq intField "Aces recebidos" Nothing <*>
-              areq intField "Aces a favor" Nothing <*>
-              areq intField "Pontos de forehand" Nothing <*>
-              areq intField "Pontos de backhand" Nothing <*>
-              areq intField "Pontos de voleio" Nothing <*>
-              areq intField "Pontos por erro forçado" Nothing <*>
-              areq intField "Dupla faltas" Nothing <*>
-              areq intField "Erros de forehand" Nothing <*>
-              areq intField "Erros de backhand" Nothing <*>
-              areq intField "Erros de voleio" Nothing 
+              areq intField (bfs ("Games a favor" :: Text)) Nothing <*>
+              areq intField (bfs ("Games contra" :: Text)) Nothing <*>
+              areq intField (bfs ("Pontos sacando" :: Text)) Nothing <*>
+              areq intField (bfs ("Pontos recebendo saque" :: Text)) Nothing <*>
+              areq intField (bfs ("Saques certos de primeira" :: Text)) Nothing <*>
+              areq intField (bfs ("Aces recebidos" :: Text)) Nothing <*>
+              areq intField (bfs ("Aces a favor" :: Text)) Nothing <*>
+              areq intField (bfs ("Pontos de forehand" :: Text)) Nothing <*>
+              areq intField (bfs ("Pontos de backhand" :: Text)) Nothing <*>
+              areq intField (bfs ("Pontos de voleio" :: Text)) Nothing <*>
+              areq intField (bfs ("Pontos por erro forçado" :: Text)) Nothing <*>
+              areq intField (bfs ("Dupla faltas" :: Text)) Nothing <*>
+              areq intField (bfs ("Erros de forehand" :: Text)) Nothing <*>
+              areq intField (bfs ("Erros de backhand" :: Text)) Nothing <*>
+              areq intField (bfs ("Erros de voleio" :: Text)) Nothing 
             
 getCadastroR :: Handler Html
 getCadastroR = do
@@ -135,11 +135,6 @@ getPerfilR uid = do
         matchesLost <- runDB $ (rawSql (T.pack $ "SELECT ?? FROM match \
                     WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
                     AND match.set_pro < match.set_con") []) :: Handler [(Entity Match)]
-                    
-        sets <- runDB $ (rawSql (T.pack $ "SELECT SUM(match.set_pro) as setPro, SUM(match.set_con) as setCon FROM match \
-                    WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-                    AND match.set_pro < match.set_con") []) :: Handler [(Entity Match)]
-                      
                               
         defaultLayout $ do
             $(whamletFile "templates/perfil.hamlet")
