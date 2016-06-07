@@ -36,8 +36,8 @@ Set json
     gamesCon Int
     pointsServiceWon Int
     pointsServiceLost Int
-    pointsService Int
     firstServiceIn Int
+    acesCon Int
     aces Int
     forehandWon Int
     backhandWon Int

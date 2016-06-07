@@ -41,7 +41,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            _{MsgHome} <small> _{MsgStatisticsOverview}   Statistics Overview
+                            _{MsgHome} <small> _{MsgStatisticsOverview}
 
                 <div class="row">
                     <div class="col-lg-12">
@@ -78,7 +78,7 @@
                                         <i class="fa fa-comments fa-5x"></i>
                                     
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">50
+                                        <div class="huge"> 20
                                         <div>Sets won
                                         
                     <div class="col-lg-3 col-md-6">
@@ -88,7 +88,7 @@
                                     <div class="col-xs-3">
                                         <i class="fa fa-comments fa-5x"></i>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">42
+                                        <div class="huge"> 10
                                         <div>Sets lost
 
                 <div class="row">

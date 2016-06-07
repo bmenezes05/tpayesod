@@ -49,7 +49,7 @@ passwordBoxField label = Field
                   |]
                , fieldEnctype = UrlEncoded
                }
-               
+    
 formUser :: Form User
 formUser extra = do
     (nomeRes, nomeView) <- mreq (textBoxField "Nome") "" Nothing
@@ -79,13 +79,32 @@ formHome extra = do
             |]
         return (userRes, widget)
 
-formMatch :: Form Match
-formMatch = renderDivs $ Match <$>
-            areq hiddenField "" Nothing <*>
+formMatch :: UserId -> Form Match
+formMatch uid = renderDivs $ Match <$>
+            areq hiddenField "" (Just uid) <*>
             areq textField "Nome do Oponente" Nothing <*>
             lift (liftIO getCurrentTime) <*>
             areq intField "Sets a favor" Nothing <*>
             areq intField "Sets contra" Nothing
+            
+formSet :: MatchId -> Form Set
+formSet mid = renderDivs $ Set <$>
+              areq hiddenField "" (Just mid) <*>
+              areq intField "Games a favor" Nothing <*>
+              areq intField "Games contra" Nothing <*>
+              areq intField "Pontos sacando" Nothing <*>
+              areq intField "Pontos recebendo saque" Nothing <*>
+              areq intField "Saques certos de primeira" Nothing <*>
+              areq intField "Aces recebidos" Nothing <*>
+              areq intField "Aces a favor" Nothing <*>
+              areq intField "Pontos de forehand" Nothing <*>
+              areq intField "Pontos de backhand" Nothing <*>
+              areq intField "Pontos de voleio" Nothing <*>
+              areq intField "Pontos por erro forçado" Nothing <*>
+              areq intField "Dupla faltas" Nothing <*>
+              areq intField "Erros de forehand" Nothing <*>
+              areq intField "Erros de backhand" Nothing <*>
+              areq intField "Erros de voleio" Nothing 
             
 getCadastroR :: Handler Html
 getCadastroR = do
@@ -108,17 +127,18 @@ postCadastroR = do
 getPerfilR :: UserId -> Handler Html
 getPerfilR uid = do
         user <- runDB $ get404 uid
-        
-        -- user <- runDB $ (rawSql (pack $ "SELECT ?? FROM user WHERE user.user_id= " ++ (show $ unpack $ lookupSession "_ID")) []) :: Handler [(Entity User)]
-                        
+    
         matchesWon <- runDB $ (rawSql (T.pack $ "SELECT ?? FROM match \
                       WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
                       AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
                       
         matchesLost <- runDB $ (rawSql (T.pack $ "SELECT ?? FROM match \
                     WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
-                    AND match.set_pro > match.set_con") []) :: Handler [(Entity Match)]
-                      
+                    AND match.set_pro < match.set_con") []) :: Handler [(Entity Match)]
+                    
+        sets <- runDB $ (rawSql (T.pack $ "SELECT SUM(match.set_pro) as setPro, SUM(match.set_con) as setCon FROM match \
+                    WHERE match.user_id= " ++ (show $ fromSqlKey uid) ++ "\
+                    AND match.set_pro < match.set_con") []) :: Handler [(Entity Match)]
                       
                               
         defaultLayout $ do
@@ -163,7 +183,6 @@ getLogoutR = do
      deleteSession "_ID"
      redirect HomeR
      
-     
 getServiceR :: UserId -> Handler Html
 getServiceR uid = do
         user <- runDB $ get404 uid     
@@ -179,7 +198,7 @@ getServiceR uid = do
             
 getNewmatchR :: UserId -> Handler Html
 getNewmatchR uid = do
-        (widget, enctype) <- generateFormPost formMatch
+        (widget, enctype) <- generateFormPost (formMatch uid)
         defaultLayout $ do
             $(whamletFile "templates/newmatch.hamlet")
             toWidget $ $(luciusFile "templates/newmatch.lucius")
@@ -189,3 +208,28 @@ getNewmatchR uid = do
             addStylesheet $ StaticR css_bootstrap_css
             addStylesheet $ StaticR css_sb_admin_css
             
+postNewmatchR :: UserId -> Handler Html
+postNewmatchR uid = do
+           ((result, _), _) <- runFormPost (formMatch uid)
+           case result of 
+               FormSuccess match -> (runDB $ insert match) >>= \piid -> redirect (NewsetR uid piid)
+               _ -> redirect ErroR            
+               
+getNewsetR :: UserId -> MatchId -> Handler Html
+getNewsetR uid mid = do
+        (widget, enctype) <- generateFormPost (formSet mid)
+        defaultLayout $ do
+            $(whamletFile "templates/newset.hamlet")
+            toWidget $ $(luciusFile "templates/newset.lucius")
+            toWidget $ $(juliusFile "templates/newset.julius")                 
+            addScript $ StaticR js_jquery_js
+            addScript $ StaticR js_bootstrap_js
+            addStylesheet $ StaticR css_bootstrap_css
+            addStylesheet $ StaticR css_sb_admin_css
+            
+postNewsetR :: UserId -> MatchId -> Handler Html
+postNewsetR uid mid = do
+           ((result, _), _) <- runFormPost (formSet mid)
+           case result of 
+               FormSuccess set -> (runDB $ insert set) >>= \piid -> redirect (PerfilR uid)
+               _ -> redirect ErroR                  
