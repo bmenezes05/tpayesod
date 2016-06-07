@@ -21,7 +21,8 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav" style="top:80px;">
                 <li class="active">
-                    <a href="@{PerfilR uid}"><i class="fa fa-fw fa-dashboard"></i> _{MsgHome}
+                    <a href="@{PerfilR uid}"><img src=@{StaticR img_inic_png} style="width: 14px; height:18px">
+                    > _{MsgHome}
                     
                 <li>
                     <a href="@{ServiceR uid}"><i class="fa fa-fw fa-bar-chart-o"></i> Service Stats
