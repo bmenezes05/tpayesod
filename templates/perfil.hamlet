@@ -41,7 +41,7 @@
                     <div class="col-lg-12">
                         <div class="alert alert-info alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-                            <img src=@{StaticR img_conversation1_png} style="width: 18px; height:14px">  <strong>Need improvement on backhand!
+                            <img src=@{StaticR img_conversation1_png} style="width: 18px; height:14px">  <strong> _{MsgNeedImprovementonbackhand}
 
                 <div class="row">
                     <div class="col-lg-3 col-md-6">
@@ -89,7 +89,7 @@
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Last Matches
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> _{MsgLastMatches}
                             
                             <div class="panel-body">
                                 <div id="container" style="width:100%; height:400px;"> 
@@ -98,7 +98,7 @@
                     <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Games Won/Lost
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> _{MsgGamesWonLost}
                             
                             <div class="panel-body">
                                 <div id="games" style="width:100%; height:400px;">
